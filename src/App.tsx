@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import axios from 'axios'
+import { FormEvent, useState } from 'react'
 
-function App() {
-  const [count, setCount] = useState(0)
+export function App() {
+  const [_, setFormState] = useState({fontSize: '', details: ''})
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    setFormState((state) => ({...state, fontSize: event.currentTarget.fontSize.value, details: event.currentTarget.details.value}))
+
+    await axios.post(import.meta.env.VITE_API_URL + '/api/submit', {fontSize: event.currentTarget.fontSize.value, details: event.currentTarget.details.value}).then(response => console.log(response.data))
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <main>
+      <form method="post"  onSubmit={handleSubmit}>
+        <label>
+          <p>Font size</p>
+          <select name="fontSize" required>
+            <option value=""></option>
+            <option value="Small" >Small</option>
+            <option value="Medium">Medium</option>
+            <option value="Large">Large</option>
+          </select>
+        </label>
+
+        <label>
+          <p>Please explain your discomfirt</p>
+          <textarea name="details" rows={5} cols={7}></textarea>
+        </label>
+
+        <button type='submit'>Submit</button>
+      </form>
+    </main>
   )
 }
 
-export default App
