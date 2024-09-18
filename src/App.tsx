@@ -1,23 +1,20 @@
 import axios from 'axios'
-import { FormEvent, useState } from 'react'
+import { FormEvent } from 'react'
 
 export function App() {
-  const [_, setFormState] = useState({fontSize: '', details: ''})
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-
-    setFormState((state) => ({...state, fontSize: event.currentTarget.fontSize.value, details: event.currentTarget.details.value}))
 
     await axios.post(import.meta.env.VITE_API_URL + '/api/submit', {fontSize: event.currentTarget.fontSize.value, details: event.currentTarget.details.value}).then(response => console.log(response.data))
   }
 
   return (
-    <main>
-      <form method="post"  onSubmit={handleSubmit}>
+    <main className='h-screen w-screen flex flex-col justify-center items-center bg-gray-800'>
+      <form method="post" className='border w-2/5 flex flex-col gap-y-4 bg-gray-50 rounded-lg px-2 py-5' onSubmit={handleSubmit}>
         <label>
-          <p>Font size</p>
-          <select name="fontSize" required>
+          <p>Font size <span className='text-red-500'>*</span></p>
+          <select name="fontSize" required className='w-full'>
             <option value=""></option>
             <option value="Small" >Small</option>
             <option value="Medium">Medium</option>
@@ -26,11 +23,11 @@ export function App() {
         </label>
 
         <label>
-          <p>Please explain your discomfirt</p>
-          <textarea name="details" rows={5} cols={7}></textarea>
+          <p>Please tell us your discomfort</p>
+          <textarea name="details" className='w-full border' rows={5} cols={7} placeholder='Type here....'></textarea>
         </label>
 
-        <button type='submit'>Submit</button>
+        <button type='submit' className='border bg-gray-600 text-white hover:bg-gray-400 hover:text-black'>Submit</button>
       </form>
     </main>
   )
